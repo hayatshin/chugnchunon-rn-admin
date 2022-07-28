@@ -1,24 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import { ApolloProvider, useReactiveVar } from "@apollo/client";
+import { useEffect } from "react";
+import client, { isLoggedInVar, tokenVar } from "./apollo";
+import Home from "./screens/Home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Statistics from "./screens/Statistics";
+import Manage from "./screens/Manage";
+import Notice from "./screens/Notice";
+import Info from "./screens/Info";
+import Rank from "./screens/Rank";
 
 function App() {
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        const token = window.localStorage.getItem("token");
+        if (token) {
+          tokenVar(token);
+          isLoggedInVar(true);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    prepare();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+      <BrowserRouter>
+        {isLoggedIn ? (
+          <Routes>
+            <Route path="/statistics" element={<Statistics />} />
+            <Route path="/manage" element={<Manage />} />
+            <Route path="/info" element={<Info />} />
+            <Route path="/rank" element={<Rank />} />
+            <Route path="/notice" element={<Notice />} />
+          </Routes>
+        ) : (
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+          </Routes>
+        )}
+      </BrowserRouter>
+    </ApolloProvider>
   );
 }
 
