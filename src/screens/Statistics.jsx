@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import Layout from "../components/Layout";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
 
 
 const SEE_ALL_USERS = gql`
@@ -17,18 +18,22 @@ const SEE_ALL_USERS = gql`
 export default function Statistics() {
     const [datastandard, setDatastandard] = useState("일간 데이터")
     const {data} = useQuery(SEE_ALL_USERS)
+    const [loading, setLoading] = useState(false)
+    const [perioddata, setPerioddata] = useState([])
     const [graphdata, setGraphdata] = useState([])
+    const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
+    const [endDate, setEndDate] = useState(new Date().getTime())
+
 
 const getsamestandard = (beforedata) => {
     const afterdata = beforedata.reduce((a, b, c) => {
-        for (let i = 0; i < (c === 0 ? 1 : c); i++){
-            if(a.length === 0 || a[i].name !== b) {
-                a[c] = {name: b, count: 1}
+        if (a.some(element => element.name === b)){
+            const certainele = a.find(element => element.name === b)
+            certainele.count ++
             } else {
-                a[c].count++
-            }   
-        }
-        return a
+                a.push({name: b, count: 1})
+            }
+            return a
     }, [])
     return afterdata.sort((a, b) => new Date(a.name).getTime()-new Date(b.name).getTime())
 }
@@ -42,31 +47,32 @@ const graphrefine = (beforerefine) => {
     return beforerefine
 }
 
-const getweek = (date) => {
-    var oneJan = new Date(date.getFullYear(),0,1);
-    var numberOfDays = Math.floor((date - oneJan) / (24 * 60 * 60 * 1000));
-    return Math.ceil(( date.getDay() + 1 + numberOfDays) / 7);
+useEffect(() => {
+    if(data !== undefined && data  !== null) {
+    setPerioddata([...data.seeAllUsers].filter(item => parseInt(item.createdAt) >= startDate && parseInt(item.createdAt) <= endDate).sort( function(a, b) {
+        return a.createdAt - b.createdAt
+    }))
 }
+}, [data, startDate, endDate])
 
 
 useEffect(() => {
-    if(data !== undefined && data !== null) {
-        const daydata = data.seeAllUsers.map((item) => (new Date(parseInt(item.createdAt)).toString().substring(0, 15))); 
+    if(perioddata !== []) {
+        const daydata = perioddata.map((item) => (new Date(parseInt(item.createdAt)).toString().substring(0, 15))); 
         setGraphdata(graphrefine(getsamestandard(daydata)))
+        setLoading(true)
     }
-}, [data, datastandard])
+}, [perioddata])
 
-console.log(graphdata)
-
-    return (
+    return   loading ? 
             <Layout click="회원 통계">
-                <div className="ml-20">
-                    <select value={datastandard} onChange={(event)=> setDatastandard(event.target.value)} name="dataStandard" id="data-standard" className="mt-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/6 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="day">일간 데이터</option> 
-                        <option value="week">주간 데이터</option>   
-                        <option value="month">월간 데이터</option>
-                    </select>
-                </div>
+                <div className="w-full flex flex-row justify-between items-center mb-5">
+                    <div className="w-60 flex flex-row">
+                        <DatePicker selected={startDate} onChange={(date) => setStartDate(date.setHours(0,0,0,0))} className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center mr-3" />
+                        <span className="text-gray-500 font-bold text-lg"> - </span>
+                        <DatePicker selected={endDate} onChange={(date) => setEndDate(date.setHours(23,59,59,999))} className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center ml-3"/>
+                    </div>
+                    </div>
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                     width={500}
@@ -88,5 +94,6 @@ console.log(graphdata)
                     </LineChart>
                 </ResponsiveContainer>
             </Layout>
-    )
+            : null 
+      
 }

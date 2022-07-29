@@ -14,7 +14,7 @@ const uploadHttpLink = createUploadLink({
 
 export const logUserIn = async (token) => {
   try {
-    window.localStorage.setItem("token", JSON.stringify(token));
+    window.sessionStorage.setItem("token", JSON.stringify(token));
     tokenVar(token);
     isLoggedInVar(true);
   } catch (e) {

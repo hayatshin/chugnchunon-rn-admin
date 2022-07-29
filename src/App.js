@@ -6,8 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Statistics from "./screens/Statistics";
 import Manage from "./screens/Manage";
 import Notice from "./screens/Notice";
-import Info from "./screens/Info";
 import Rank from "./screens/Rank";
+import Activity from "./screens/Activity";
 
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     async function prepare() {
       try {
-        const token = window.localStorage.getItem("token");
+        const token = window.sessionStorage.getItem("token");
         if (token) {
           tokenVar(token);
           isLoggedInVar(true);
@@ -34,7 +34,7 @@ function App() {
           <Routes>
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/manage" element={<Manage />} />
-            <Route path="/info" element={<Info />} />
+            <Route path="/activity" element={<Activity />} />
             <Route path="/rank" element={<Rank />} />
             <Route path="/notice" element={<Notice />} />
           </Routes>

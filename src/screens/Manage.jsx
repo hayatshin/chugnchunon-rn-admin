@@ -96,10 +96,10 @@ export default function Manage() {
                         <DatePicker selected={endDate} onChange={(date) => setEndDate(date.setHours(23,59,59,999))} className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center ml-3"/>
                     </div>
                     <div>
-                        <CSVLink data={csvdata} className="border border-gray-500 bg-gray-400 rounded-md py-2 px-5 text-white font-bold">CSV 다운로드</CSVLink>
+                        <CSVLink data={csvdata} className="bg-gray-500 rounded-md py-2 px-5 text-white font-bold">CSV 다운로드</CSVLink>
                     </div>
                 </div>
-                <table className="border-collapse ">
+                <table className="border-collapse min-w-max">
                     <tbody>
                         <tr>
                             <th className="border-b-2 border-slate-700 justify-center items-center px-5 py-1 text-left text-sm">등록일</th>

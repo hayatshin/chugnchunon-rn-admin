@@ -6,7 +6,7 @@ export default function Layout({click, children}) {
     const navigation = useNavigate()
 
     return (
-    <div className="w-screen h-screen flex flex-row">
+    <div className="min-w-screen h-screen flex flex-row">
         <div className="w-64 h-full bg-gray-100 border-r border-gray-300 flex flex-col py-5" >
             <div className="px-5">
                 <h3 className="text-[#FF2D78] font-medium text-2xl mb-10">청춘온</h3>
@@ -26,11 +26,11 @@ export default function Layout({click, children}) {
 </svg>
                     <span className="text-gray-600">회원 관리</span>
                 </div>
-                <div onClick={() => navigation('/info')} className={menuclick("px-5 py-2 flex flex-row space-x-3 cursor-pointer w-full", click === "회원 정보" ? "bg-white": null )}>
-                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                    <span className="text-gray-600">회원 정보</span>
+                <div onClick={() => navigation('/activity')} className={menuclick("px-5 py-2 flex flex-row space-x-3 cursor-pointer w-full", click === "활동 통계" ? "bg-white": null )}>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    <span className="text-gray-600">활동 통계</span>
                 </div>
                 <div onClick={() => navigation('/rank')} className={menuclick("px-5 py-2 flex flex-row space-x-3 cursor-pointer w-full", click === "순위 정보" ? "bg-white": null )}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
