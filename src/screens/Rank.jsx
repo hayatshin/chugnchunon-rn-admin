@@ -428,8 +428,7 @@ const onValid = (input) => {
                 </div>
                 <form onSubmit={handleSubmit(onValid)}>
                     <input
-                        {...register("searchname", { required: "이름을 적어주세요." })}
-                        onChange={(text)=> setSearchinput(text)}
+                        {...register("searchname", { required: "이름을 적어주세요.", onChange: (text)=> {setSearchinput(text)} })}
                         type="text" placeholder="이름을 검색해주세요." className="focus:outline-none focus:border-[#FF2D78] border-2 w-56 border-gray-500 rounded-md py-1 text-center"></input>
                     <button className="bg-gray-300 rounded-md py-1 px-3 ml-2">검색</button>
                 </form>

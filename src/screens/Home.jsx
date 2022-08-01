@@ -70,8 +70,7 @@ export default function Home() {
         className="flex flex-col items-center sm:w-screen"
       >
         <input
-          {...register("email", { required: "이메일을 기입해주세요." })}
-          onChange={() => clearErrors("wrongemail")}
+          {...register("email", { required: "이메일을 기입해주세요.", onChange: (e)=> clearErrors("wrongemail") })}
           type="text"
           placeholder="이메일"
           className="px-3 w-80 h-12 shadow-sm placeholder-gray-400 focus:outline-none focus:border-pink-400 focus:border-2"
@@ -80,8 +79,7 @@ export default function Home() {
           {errors.email?.message || errors.wrongemail?.message}
         </span>
         <input
-          {...register("password", { required: "비밀번호를 기입해주세요." })}
-          onChange={() => clearErrors("wrongpassword")}
+          {...register("password", { required: "비밀번호를 기입해주세요.", onChange: (e)=> clearErrors("wrongpassword") })}
           type="password"
           placeholder="비밀번호"
           className="px-3 w-80 h-12 shadow-sm placeholder-gray-400 focus:outline-none focus:border-pink-400 focus:border-2"

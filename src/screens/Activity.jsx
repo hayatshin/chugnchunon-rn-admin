@@ -4,45 +4,80 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 
-const SEE_ALL_USERS = gql`
-  query seeAllUsers {
-    seeAllUsers {
+const SEE_ADMIN_FEED = gql`
+  query seeAdminAllFeeds {
+    seeAdminAllFeeds {
       id
       createdAt
-      totalPointNumber
-      totalLikeNumber
-      totalCommentNumber
-      totalFeedNumber
-      totalPoemNumber
     }
   }
-`;
+`
+
+const SEE_ADMIN_POEM = gql`
+  query seeAdminAllPoems {
+    seeAdminAllPoems {
+      id
+      createdAt
+    }
+  }
+`
+
+const SEE_ADMIN_FPLIKES = gql`
+  query seeAdminAllLikes {
+    seeAdminAllLikes {
+      id
+      createdAt
+    }
+  }
+`
+
+const SEE_ADMIN_FPCOMMENTS = gql`
+  query seeAdminAllComments {
+    seeAdminAllComments {
+      id
+      createdAt
+    }
+  }
+`
 
 export default function Activity() {
   const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
   const [endDate, setEndDate] = useState(new Date().getTime())
-  const {data} = useQuery(SEE_ALL_USERS)
+  const {data: feedData} = useQuery(SEE_ADMIN_FEED)
+  const {data: poemData} = useQuery(SEE_ADMIN_POEM)
+  const {data: fpLikesData} = useQuery(SEE_ADMIN_FPLIKES)
+  const {data: fpCommentsData} = useQuery(SEE_ADMIN_FPCOMMENTS)
+  const [datasum, setDatasum] = useState([])
+
   const [perioddata, setPerioddata] = useState([])
   const [graphdata, setGraphdata] = useState([])
   const [loading, setLoading] = useState(false)
-  const [pointdata, setPointdata] = useState([])
-  const [feeddata, setFeeddata] = useState([])
-  const [poemdata, setPoemdata] = useState([])
-  const [commentdata, setCommentdata] = useState([])
-  const [likedata, setLikedata] = useState([])
+
+  const convertData =(date) => `${new Date(parseInt(date)).getMonth() +1}월 ${new Date(parseInt(date)).getDate()}일`
 
   const getsamestandard = (beforedata) => {
     const afterdata = beforedata.reduce((a, b, c) => {
-        if (a.some(element => element.createdAt === b.createdAt)){
-            const certainele = a.find(element => element.createdAt === b.createdAt)
-            certainele.point = parseInt(certainele.point) + parseInt(b.totalPointNumber) 
-            certainele.feed = parseInt(certainele.feed) + parseInt(b.totalFeedNumber) 
-            certainele.poem = parseInt(certainele.poem) + parseInt(b.totalPoemNumber) 
-            certainele.comment = parseInt(certainele.comment) + parseInt(b.totalCommentNumber) 
-            certainele.like = parseInt(certainele.like) + parseInt(b.totalLikeNumber) 
-
+        if (a.some(element => element.createdAt === convertData(b.createdAt))){
+            const certainele = a.find(element => element.createdAt === convertData(b.createdAt))
+              if(b.__typename === "Feed"){
+                certainele.feed ++
+              } else if (b.__typename === "Poem"){
+                certainele.poem ++
+              } else if (b.__typename === "Feedpoemlike"){
+                certainele.like ++
+              } else if (b.__typename === "Feedpoemcomment"){
+                certainele.comment ++
+              }
             } else {
-                a.push({createdAt: b.createdAt, point: b.totalPointNumber, feed:b.totalFeedNumber, poem: b.totalPoemNumber, like: b.totalLikeNumber, comment: b.totalCommentNumber})
+              if(b.__typename === "Feed"){
+                a.push({createdAt: convertData(b.createdAt), feed:1, poem: 0, like:0, comment: 0})
+              } else if (b.__typename === "Poem"){
+                a.push({createdAt:convertData(b.createdAt), feed:0, poem: 1, like:0, comment: 0})
+              } else if (b.__typename === "Feedpoemlike"){
+                a.push({createdAt: convertData(b.createdAt), feed:0, poem: 0, like:1, comment: 0})
+              } else if (b.__typename === "Feedpoemcomment"){
+                a.push({createdAt: convertData(b.createdAt), feed:0, poem: 1, like:0, comment: 1})
+              }     
             }
             return a
     }, [])
@@ -51,8 +86,6 @@ export default function Activity() {
 
 const graphrefine = (beforerefine) => {
         for (let i = 0; i < beforerefine.length; i++) {
-          console.log(beforerefine[i].createdAt)
-        beforerefine[i].createdAt = `${new Date(parseInt(beforerefine[i].createdAt)).getMonth() +1}월 ${new Date(parseInt(beforerefine[i].createdAt)).getDate()}일`
         beforerefine[i]['name'] = beforerefine[i]['createdAt']
         beforerefine[i]['점수'] = beforerefine[i]['point']
         beforerefine[i]['일상'] = beforerefine[i]['feed']
@@ -70,23 +103,27 @@ const graphrefine = (beforerefine) => {
 }
 
 useEffect(() => {
-    if(data !== undefined && data  !== null) {
-    setPerioddata([...data.seeAllUsers].filter(item => parseInt(item.createdAt) >= startDate && parseInt(item.createdAt) <= endDate).sort( function(a, b) {
+  if(feedData !== undefined && feedData !== null && poemData !== undefined && poemData !== null && fpLikesData !== undefined && fpLikesData !== null & fpCommentsData !== undefined && fpCommentsData !== null) {
+    setDatasum((oldArray)=> oldArray.concat(feedData.seeAdminAllFeeds).concat(poemData.seeAdminAllPoems).concat(fpLikesData.seeAdminAllLikes).concat(fpCommentsData.seeAdminAllComments))
+  }
+}, [feedData, poemData, fpLikesData, fpCommentsData])
+
+useEffect(() => {
+    if(datasum !== undefined && datasum  !== null) {
+      console.log("datasum", datasum)
+    setPerioddata(datasum.filter(item => parseInt(item.createdAt) >= startDate && parseInt(item.createdAt) <= endDate).sort( function(a, b) {
         return a.createdAt - b.createdAt
     }))
 }
-}, [data, startDate, endDate])
+}, [datasum, startDate, endDate])
 
 
 useEffect(() => {
   if(perioddata !== []) {
       setGraphdata(graphrefine(getsamestandard(perioddata)))
-      getsamestandard(perioddata)
       setLoading(true)
   }
 }, [perioddata])
-
-console.log(graphdata)
 
     return (
         <Layout click="활동 통계">
@@ -115,11 +152,11 @@ console.log(graphdata)
                               <YAxis />
                               <Tooltip />
                               <Legend />
-                              <Line type="monotone" dataKey="점수" stroke="#FF2D78" activeDot={{ r: 8 }} strokeWidth={2} />
-                              <Line type="monotone" dataKey="일상" stroke="#956BBF" activeDot={{ r: 8 }} />
+                              {/* <Line type="monotone" dataKey="점수" stroke="#FF2D78" activeDot={{ r: 8 }} strokeWidth={2} /> */}
+                              <Line type="monotone" dataKey="일상" stroke="#FF2D78" activeDot={{ r: 8 }} />
                               <Line type="monotone" dataKey="시" stroke="#23A621" activeDot={{ r: 8 }} />
                               <Line type="monotone" dataKey="댓글" stroke="#1678BC" activeDot={{ r: 8 }} />
-                              <Line type="monotone" dataKey="좋아요" stroke="#FE7F0D" activeDot={{ r: 8 }} />
+                              <Line type="monotone" dataKey="좋아요" stroke="#956BB" activeDot={{ r: 8 }} />
                               </LineChart>
                           </ResponsiveContainer>
                           : null }
