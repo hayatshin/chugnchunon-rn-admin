@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/chungchunon-rn-admin/static/css/main.054e2c83.css",
-    "main.js": "/chungchunon-rn-admin/static/js/main.7dedc0b3.js",
-    "static/media/sjcm.png": "/chungchunon-rn-admin/static/media/sjcm.56cfa07b8c9fc442c5d2.png",
-    "static/media/ch-logo.gif": "/chungchunon-rn-admin/static/media/ch-logo.a49c1da2c43528fe1e5f.gif",
-    "index.html": "/chungchunon-rn-admin/index.html",
-    "static/media/index.cjs": "/chungchunon-rn-admin/static/media/index.cd351d7c31d0d3fccf96.cjs",
-    "main.054e2c83.css.map": "/chungchunon-rn-admin/static/css/main.054e2c83.css.map",
-    "main.7dedc0b3.js.map": "/chungchunon-rn-admin/static/js/main.7dedc0b3.js.map"
+    "main.css": "./static/css/main.054e2c83.css",
+    "main.js": "./static/js/main.64ec1428.js",
+    "static/media/sjcm.png": "./static/media/sjcm.56cfa07b8c9fc442c5d2.png",
+    "static/media/ch-logo.gif": "./static/media/ch-logo.a49c1da2c43528fe1e5f.gif",
+    "index.html": "./index.html",
+    "static/media/index.cjs": "./static/media/index.cd351d7c31d0d3fccf96.cjs",
+    "main.054e2c83.css.map": "./static/css/main.054e2c83.css.map",
+    "main.64ec1428.js.map": "./static/js/main.64ec1428.js.map"
   },
   "entrypoints": [
     "static/css/main.054e2c83.css",
-    "static/js/main.7dedc0b3.js"
+    "static/js/main.64ec1428.js"
   ]
 }
