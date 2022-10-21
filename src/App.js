@@ -8,6 +8,7 @@ import Manage from "./screens/Manage";
 import Notice from "./screens/Notice";
 import Rank from "./screens/Rank";
 import Activity from "./screens/Activity";
+import { HelmetProvider } from "react-helmet-async";
 
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
@@ -28,21 +29,23 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
-      <BrowserRouter>
-        {isLoggedIn ? (
-          <Routes>
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/manage" element={<Manage />} />
-            <Route path="/activity" element={<Activity />} />
-            <Route path="/rank" element={<Rank />} />
-            <Route path="/notice" element={<Notice />} />
-          </Routes>
-        ) : (
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-          </Routes>
-        )}
-      </BrowserRouter>
+      <HelmetProvider>
+        <BrowserRouter>
+          {isLoggedIn ? (
+            <Routes>
+              <Route path="/statistics" element={<Statistics />} />
+              <Route path="/manage" element={<Manage />} />
+              <Route path="/activity" element={<Activity />} />
+              <Route path="/rank" element={<Rank />} />
+              <Route path="/notice" element={<Notice />} />
+            </Routes>
+          ) : (
+            <Routes>
+              <Route exact path="/" element={<Home />} />
+            </Routes>
+          )}
+        </BrowserRouter>
+      </HelmetProvider>
     </ApolloProvider>
   );
 }
