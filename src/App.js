@@ -11,7 +11,6 @@ import Activity from "./screens/Activity";
 
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
-
   useEffect(() => {
     async function prepare() {
       try {
