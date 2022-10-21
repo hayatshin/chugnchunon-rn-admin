@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import Layout from "../components/Layout";
 import DatePicker from "react-datepicker";
 import { useMemo } from "react";
+import ReactHelmet from "../components/ReactHelmet";
 
 const SEE_ALL_USERS_QUERY = gql`
   query seeAllUsers {
@@ -427,131 +428,134 @@ export default function Rank() {
   }
 
   return (
-    <Layout click="순위 정보">
-      <div className="w-full flex flex-row items-start mb-10 justify-between">
-        <div className="w-1/2 flex flex-col">
-          <div className="w-60 flex flex-row">
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center mr-3"
-            />
-            <span className="text-gray-500 font-bold text-lg"> - </span>
-            <DatePicker
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center ml-3"
-            />
+    <>
+      <ReactHelmet title="순위 정보" />
+      <Layout click="순위 정보">
+        <div className="w-full flex flex-row items-start mb-10 justify-between">
+          <div className="w-1/2 flex flex-col">
+            <div className="w-60 flex flex-row">
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center mr-3"
+              />
+              <span className="text-gray-500 font-bold text-lg"> - </span>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center ml-3"
+              />
+            </div>
+            <div className="h-5"></div>
+            <div className="flex flex-row items-start">
+              <span className="mr-5 font-bold">정렬 기준 설정</span>
+              <select
+                value={criteria}
+                onChange={(event) => setCriteria(event.target.value)}
+                className="border border-gray-600 border-collapse text-black py-1 w-32 border-noneoutline-none rounded-md text-center"
+              >
+                <option name="point" className="text-gray-600">
+                  점수
+                </option>
+                <option name="feed" className="text-gray-600">
+                  일상
+                </option>
+                <option name="poem" className="text-gray-600">
+                  시
+                </option>
+                <option name="like" className="text-gray-600">
+                  좋아요
+                </option>
+                <option name="comment" className="text-gray-600">
+                  댓글
+                </option>
+                <option name="comment" className="text-gray-600">
+                  걸음수
+                </option>
+              </select>
+            </div>
           </div>
-          <div className="h-5"></div>
-          <div className="flex flex-row items-start">
-            <span className="mr-5 font-bold">정렬 기준 설정</span>
-            <select
-              value={criteria}
-              onChange={(event) => setCriteria(event.target.value)}
-              className="border border-gray-600 border-collapse text-black py-1 w-32 border-noneoutline-none rounded-md text-center"
-            >
-              <option name="point" className="text-gray-600">
+          <form onSubmit={handleSubmit(onValid)}>
+            <input
+              {...register("searchname", {
+                onChange: (text) => {
+                  setKeyword(text);
+                },
+              })}
+              type="text"
+              placeholder="이름을 검색해주세요."
+              className="focus:outline-none focus:border-[#FF2D78] border-2 w-56 border-gray-500 rounded-md py-1 text-center"
+            ></input>
+            <button className="bg-gray-300 rounded-md py-1 px-3 ml-2">
+              검색
+            </button>
+          </form>
+          <div>
+            {loading ? (
+              <CSVLink
+                data={csvdata}
+                className="bg-gray-500 rounded-md py-2 px-5 text-white font-bold"
+              >
+                CSV 다운로드
+              </CSVLink>
+            ) : null}
+          </div>
+        </div>
+        <table className="border-collapse">
+          <tbody>
+            <tr>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
+                순위
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-2 text-left text-sm">
+                이름
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
+                나이
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
+                출생년도
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
+                생일
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
+                성별
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
+                핸드폰 번호
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
+                거주 지역
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
+                소속 기관
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
                 점수
-              </option>
-              <option name="feed" className="text-gray-600">
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
                 일상
-              </option>
-              <option name="poem" className="text-gray-600">
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
                 시
-              </option>
-              <option name="like" className="text-gray-600">
-                좋아요
-              </option>
-              <option name="comment" className="text-gray-600">
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
                 댓글
-              </option>
-              <option name="comment" className="text-gray-600">
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
+                좋아요
+              </th>
+              <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
                 걸음수
-              </option>
-            </select>
-          </div>
-        </div>
-        <form onSubmit={handleSubmit(onValid)}>
-          <input
-            {...register("searchname", {
-              onChange: (text) => {
-                setKeyword(text);
-              },
-            })}
-            type="text"
-            placeholder="이름을 검색해주세요."
-            className="focus:outline-none focus:border-[#FF2D78] border-2 w-56 border-gray-500 rounded-md py-1 text-center"
-          ></input>
-          <button className="bg-gray-300 rounded-md py-1 px-3 ml-2">
-            검색
-          </button>
-        </form>
-        <div>
-          {loading ? (
-            <CSVLink
-              data={csvdata}
-              className="bg-gray-500 rounded-md py-2 px-5 text-white font-bold"
-            >
-              CSV 다운로드
-            </CSVLink>
-          ) : null}
-        </div>
-      </div>
-      <table className="border-collapse">
-        <tbody>
-          <tr>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
-              순위
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-2 text-left text-sm">
-              이름
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
-              나이
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
-              출생년도
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
-              생일
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
-              성별
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
-              핸드폰 번호
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
-              거주 지역
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-left text-sm">
-              소속 기관
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
-              점수
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
-              일상
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
-              시
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
-              댓글
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
-              좋아요
-            </th>
-            <th className="border-b-2 border-slate-700 justify-center items-center px-2 py-1 text-center text-sm">
-              걸음수
-            </th>
-          </tr>
-          {loading
-            ? resultdata.map((item, index) => tablemap(item, index))
-            : null}
-        </tbody>
-      </table>
-    </Layout>
+              </th>
+            </tr>
+            {loading
+              ? resultdata.map((item, index) => tablemap(item, index))
+              : null}
+          </tbody>
+        </table>
+      </Layout>
+    </>
   );
 }

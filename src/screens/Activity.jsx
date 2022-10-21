@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
+import ReactHelmet from "../components/ReactHelmet";
 
 const SEE_ADMIN_FEED = gql`
   query seeAdminAllFeeds {
@@ -207,79 +208,82 @@ export default function Activity() {
   }, [sameDateArray]);
 
   return (
-    <Layout click="활동 통계">
-      <div className="w-full flex flex-row justify-between items-center mb-5">
-        <div className="w-60 flex flex-row">
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center mr-3"
-          />
-          <span className="text-gray-500 font-bold text-lg"> - </span>
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center ml-3"
-          />
+    <>
+      <ReactHelmet title="활동 통계" />
+      <Layout click="활동 통계">
+        <div className="w-full flex flex-row justify-between items-center mb-5">
+          <div className="w-60 flex flex-row">
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center mr-3"
+            />
+            <span className="text-gray-500 font-bold text-lg"> - </span>
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              className="border border-gray-500 bg-gray-50 text-black py-1 rounded-md font-bold text-center ml-3"
+            />
+          </div>
         </div>
-      </div>
-      {loading ? (
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            width={500}
-            height={300}
-            data={resultData}
-            margin={{
-              top: 50,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {/* <Line type="monotone" dataKey="점수" stroke="#FF2D78" activeDot={{ r: 8 }} strokeWidth={2} /> */}
-            <Line
-              type="monotone"
-              dataKey="일상"
-              stroke="#9b5de5"
-              strokeWidth={3}
-              activeDot={{ r: 8 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="시"
-              stroke="#f15bb5"
-              strokeWidth={3}
-              activeDot={{ r: 8 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="댓글"
-              stroke="#fee440"
-              strokeWidth={3}
-              activeDot={{ r: 8 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="좋아요"
-              stroke="#00bbf9"
-              strokeWidth={3}
-              activeDot={{ r: 8 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="걸음수"
-              stroke="#007200"
-              strokeWidth={3}
-              activeDot={{ r: 8 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      ) : null}
-    </Layout>
+        {loading ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              width={500}
+              height={300}
+              data={resultData}
+              margin={{
+                top: 50,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {/* <Line type="monotone" dataKey="점수" stroke="#FF2D78" activeDot={{ r: 8 }} strokeWidth={2} /> */}
+              <Line
+                type="monotone"
+                dataKey="일상"
+                stroke="#9b5de5"
+                strokeWidth={3}
+                activeDot={{ r: 8 }}
+              />
+              <Line
+                type="monotone"
+                dataKey="시"
+                stroke="#f15bb5"
+                strokeWidth={3}
+                activeDot={{ r: 8 }}
+              />
+              <Line
+                type="monotone"
+                dataKey="댓글"
+                stroke="#fee440"
+                strokeWidth={3}
+                activeDot={{ r: 8 }}
+              />
+              <Line
+                type="monotone"
+                dataKey="좋아요"
+                stroke="#00bbf9"
+                strokeWidth={3}
+                activeDot={{ r: 8 }}
+              />
+              <Line
+                type="monotone"
+                dataKey="걸음수"
+                stroke="#007200"
+                strokeWidth={3}
+                activeDot={{ r: 8 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : null}
+      </Layout>
+    </>
   );
 }
