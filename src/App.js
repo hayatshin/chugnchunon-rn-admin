@@ -30,7 +30,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <HelmetProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
           {isLoggedIn ? (
             <Routes>
               <Route path="/statistics" element={<Statistics />} />
